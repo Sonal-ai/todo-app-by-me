@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo"></div>
+            <div class="options">
+                <form action="/admin/todos" method="get">
+                    <button type="submit" class="btn">
+                        admin access
+                    </button>
+                </form>
+                <form action="/user/logout" method="get">
+                    <button type="submit" class="btn">
+                        <img src="/logout.svg"> Logout
+                    </button>
+                </form>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <form action="/todo" method="post" class="form_submit">
+            <label for="title" class="label">TITLE : </label>
+            <input type="text" name="title" id="title">
+            <br>
+            <label for="description" class="label">DESCRIPTION : </label>
+            <textarea name="description" id="description" rows="5"></textarea>
+            <br>
+            <button type="submit" class="btn"><img src="/add_todo.svg">&nbsp;&nbsp;&nbsp;&nbsp;Add todo</button>
+        </form>
+        <table>
+            <% if (locals.todos) { %>
+                <% todos.forEach((todo,index) => { %>
+                    <tr class="expandable-row">
+                        <td><form class="todo" action="/todo/edit?id=<%= todo._id %>" method="post">
+                            <input type="text" name="title" value="<%= todo.title %>" disabled>
+                            <textarea rows="1" name="description" disabled><%= todo.description %></textarea>
+                            <select name="status" id="status" disabled>
+                                <option value="<%= todo.status %>"><%= todo.status %></option>
+                                <option value="incomplete">incomplete</option>
+                                <option value="inprogress">inprogress</option>
+                                <option value="complete">complete</option>
+                            </select>
+                            <div class="saveTd"></div>
+                        </form></td>
+                        <td><a class="del" href="/todo/delete?id=<%= todo._id %>"><img src="/del.svg"></a></td>
+                        <td ><img class="edit" src="/edit.svg"></td>
+                    </tr>
+                    <% }) %>
+                <% } %>
+        </table>
+    </main>
+    <script>
+        const rows = document.querySelectorAll('.expandable-row');
+    
+        rows.forEach(row => {
+            const editIcon = row.querySelector(".edit")
+            editIcon.addEventListener('click', function () {
+                row.classList.toggle('expanded');
+                event.preventDefault();
+
+                
+                const inputs = row.querySelectorAll('input , textarea , #status');
+                const textarea = row.querySelector('textarea');
+                const existingButton = row.querySelector('.save');
+                inputs.forEach(input => {
+                if (row.classList.contains('expanded')) {
+                    input.removeAttribute('disabled'); 
+                    textarea.setAttribute('rows', 8);
+
+                } else {
+                    input.setAttribute('disabled', true); 
+                    textarea.setAttribute('rows', 1);
+                }});
+
+
+                if(row.classList.contains('expanded')){
+                    if (!existingButton) {
+                    let button = document.createElement('button'); // Create new <td> for the Save button
+                    button.className = "save";
+                    button.setAttribute('type',"submit")
+                    button.innerHTML = "Save";
+                    row.querySelector('.saveTd').appendChild(button); }
+                }else{
+                    if (existingButton) {
+                        existingButton.remove();}
+                }
+            });
+        });
+
+      </script>
+</body>
+</html>

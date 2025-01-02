@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogIn</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo"></div>
+            <div class="options">
+                <a class="btn" href="/signup">Signup</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <form action="/user/login" method="post" class="form_submit">
+            <h1>Login</h1><br>
+            <% if (locals.messageUser) { %>
+                <p style="color: red; font-size: 16px;"><%= messageUser %> <a href="/signup" style="color: white;">Signup</a> first then try again</p>
+            <% }else if(locals.messagePassword){ %>
+                <p style="color: red; font-size: 16px;"><%= messagePassword %></p>
+            <% }%>
+            <br>
+            <label for="email">Email : </label>
+            <input type="email" name="email" id="email">
+            <br>
+            <label for="password">Password : </label>
+            <input type="password" name="password" id="password">
+            <br>
+            <button class="btn" type="submit">LogIn</button>
+        </form>
+    </main>
+</body>
+</html>
